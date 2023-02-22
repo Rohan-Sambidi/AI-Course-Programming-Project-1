@@ -29,19 +29,15 @@ def compute_g(algorithm, node, goal_state):
     	return 0
 
     if algorithm == "astar":
-
         return node.get_total_action_cost()
 
     elif algorithm == "gbfs":
-
         return 0
 
     elif algorithm == "ucs":
-
         return node.get_total_action_cost()
 
     elif algorithm == "custom-astar":
-
         return node.get_total_action_cost()
 
     # Should never reach here.
@@ -69,23 +65,18 @@ def compute_h(algorithm, node, goal_state):
     """
 
     if algorithm == "bfs":
-        
         return 0
 
     if algorithm == "astar":
-
         return get_manhattan_distance(node.get_state(), goal_state)
 
     elif algorithm == "gbfs":
-
         return get_manhattan_distance(node.get_state(), goal_state)
 
     elif algorithm == "ucs":
-        
         return 0
 
     elif algorithm == "custom-astar":
-
         return get_custom_heuristic(node.get_state(), goal_state)
 
     # Should never reach here.
@@ -143,19 +134,6 @@ def graph_search(algorithm, time_limit):
     total_nodes_expanded = 0
     time_limit = time.time() + time_limit
     
-    '''
-    YOUR CODE HERE
-
-    Remove "raise NotImplementedError() and add your code.
-
-    Your code for graph search should populate action_list and set total_nodes_expanded
-    The automated script will verify their values
-
-    In addition to this you must also write code for:
-    1. compute_g
-    2. compute_h
-    '''
-    
     explored = []
     flag = 0
     a_list = {}
@@ -167,32 +145,21 @@ def graph_search(algorithm, time_limit):
     		return action_list, total_nodes_expanded
     		
     	while True:
-    		if flag == 1:
+    		if flag == 1 or priority_queue.is_empty():
     			break
-    		
-    		if priority_queue.is_empty():
-    			#return action_list, total_nodes_expanded
-    			break
-    	
     		node = priority_queue.pop()
-    		
     		curr_action = a_list.pop(node)
-    		
     		explored.append(node.get_state())
     		total_nodes_expanded += 1
-    		    		
     		children_nodes = list(helper.get_successor(node.get_state()).items())
-    	
     		for a in children_nodes:
     			curr_state = a[1][0]
     			curr_node = Node(curr_state, node, 0, a[0], a[1][1])
-    			
     			curr_action.append(a[0])
-    			
     			f_score = compute_g(algorithm, curr_node, goal_state) \
         			+ compute_h(algorithm, curr_node, goal_state)
         			
-    			if (curr_state not in explored):  #and (not priority_queue.contains(curr_state))):
+    			if ((curr_state not in explored) or (not priority_queue.contains(curr_state))):
     				if curr_state == goal_state:
     					flag ==1
     					action_list = curr_action
@@ -201,38 +168,28 @@ def graph_search(algorithm, time_limit):
     					break
     				
     				priority_queue.push(f_score, curr_node)
-    				
     				a_list[curr_node] = curr_action
     				dummy = curr_action.pop() 
-
-
+    
     else:
-
 	    while True:	    		
 	    	if priority_queue.is_empty():
-	    		return action_list, total_nodes_expanded
-	    	
+	    	    return action_list, total_nodes_expanded
 	    	node = priority_queue.pop()
-	    	
 	    	curr_action = a_list.pop(node)
-	    	
-	    	if node.get_state() == goal_state:
-	    		return curr_action, total_nodes_expanded
-	    		
-	    	explored.append(node.get_state())
+            explored.append(node.get_state())
 	    	total_nodes_expanded += 1
-	
+	    	if node.get_state() == goal_state:
+	    		return curr_action, total_nodes_expanded	
 	    	children_nodes = list(helper.get_successor(node.get_state()).items())
 	    	
 	    	for a in children_nodes:
 	    		curr_state = a[1][0]
 	    		curr_node = Node(curr_state, node, total_nodes_expanded, a[0], a[1][1])
-	    		
-	    		
 	    		f_score = compute_g(algorithm, curr_node, goal_state) \
 	        		+ compute_h(algorithm, curr_node, goal_state)
 	        			
-	    		if (curr_state not in explored):# and (not priority_queue.contains(curr_state))):
+	    		if ((curr_state not in explored) or (not priority_queue.contains(curr_state))):
 	    			priority_queue.push(f_score, curr_node)
 	    			
 	    			curr_action.append(a[0])
@@ -241,7 +198,5 @@ def graph_search(algorithm, time_limit):
     
 
     if time.time() >= time_limit:
-    
         raise SearchTimeOutError("Search timed out after %u secs." % (time_limit))
-
     return action_list, total_nodes_expanded
