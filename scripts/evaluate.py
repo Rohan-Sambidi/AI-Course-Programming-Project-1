@@ -89,7 +89,8 @@ def get_manhattan_distance(from_state, to_state):
 
 
 def get_custom_heuristic(from_state, to_state):
-    return ((from_state.x - to_state.x)**2 + (from_state.y - to_state.y)**2)**0.5
+    #return ((from_state.x - to_state.x)**2 + (from_state.y - to_state.y)**2)**0.5
+    return max(abs(from_state.x - to_state.x), abs(from_state.y - to_state.y))
 
 def graph_search(algorithm, time_limit):
     """
