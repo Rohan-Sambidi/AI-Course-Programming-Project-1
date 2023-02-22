@@ -26,23 +26,23 @@ def compute_g(algorithm, node, goal_state):
     """
 
     if algorithm == "bfs":
-        return NotImplementedError()
+    	return 0
 
     if algorithm == "astar":
 
-        return NotImplementedError()
+        return node.get_total_action_cost()
 
     elif algorithm == "gbfs":
 
-        return NotImplementedError()
+        return 0
 
     elif algorithm == "ucs":
 
-        return NotImplementedError()
+        return node.get_total_action_cost()
 
     elif algorithm == "custom-astar":
 
-        return NotImplementedError()
+        return node.get_total_action_cost()
 
     # Should never reach here.
     assert False
@@ -70,23 +70,23 @@ def compute_h(algorithm, node, goal_state):
 
     if algorithm == "bfs":
         
-        return NotImplementedError()
+        return 0
 
     if algorithm == "astar":
 
-        return NotImplementedError()
+        return get_manhattan_distance(node.get_state(), goal_state)
 
     elif algorithm == "gbfs":
 
-        return NotImplementedError()
+        return get_manhattan_distance(node.get_state(), goal_state)
 
     elif algorithm == "ucs":
         
-        return NotImplementedError()
+        return 0
 
     elif algorithm == "custom-astar":
 
-        return NotImplementedError()
+        return get_custom_heuristic(node.get_state(), goal_state)
 
     # Should never reach here.
     assert False
@@ -98,8 +98,7 @@ def get_manhattan_distance(from_state, to_state):
 
 
 def get_custom_heuristic(from_state, to_state):
-    
-    return NotImplementedError()
+    return ((from_state.x - to_state.x)**2 + (from_state.y - to_state.y)**2)**0.5
 
 def graph_search(algorithm, time_limit):
     """
@@ -156,6 +155,90 @@ def graph_search(algorithm, time_limit):
     1. compute_g
     2. compute_h
     '''
+    
+    explored = []
+    flag = 0
+    a_list = {}
+    a_list[init_node] = []
+    
+    if algorithm == "bfs":
+    	
+    	if init_node.get_state() == goal_state:
+    		return action_list, total_nodes_expanded
+    		
+    	while True:
+    		if flag == 1:
+    			break
+    		
+    		if priority_queue.is_empty():
+    			#return action_list, total_nodes_expanded
+    			break
+    	
+    		node = priority_queue.pop()
+    		
+    		curr_action = a_list.pop(node)
+    		
+    		explored.append(node.get_state())
+    		total_nodes_expanded += 1
+    		    		
+    		children_nodes = list(helper.get_successor(node.get_state()).items())
+    	
+    		for a in children_nodes:
+    			curr_state = a[1][0]
+    			curr_node = Node(curr_state, node, 0, a[0], a[1][1])
+    			
+    			curr_action.append(a[0])
+    			
+    			f_score = compute_g(algorithm, curr_node, goal_state) \
+        			+ compute_h(algorithm, curr_node, goal_state)
+        			
+    			if (curr_state not in explored):  #and (not priority_queue.contains(curr_state))):
+    				if curr_state == goal_state:
+    					flag ==1
+    					action_list = curr_action
+    					dummy = curr_action.pop()
+    					#return action_list, total_nodes_expanded
+    					break
+    				
+    				priority_queue.push(f_score, curr_node)
+    				
+    				a_list[curr_node] = curr_action
+    				dummy = curr_action.pop() 
+
+
+    else:
+
+	    while True:	    		
+	    	if priority_queue.is_empty():
+	    		return action_list, total_nodes_expanded
+	    	
+	    	node = priority_queue.pop()
+	    	
+	    	curr_action = a_list.pop(node)
+	    	
+	    	if node.get_state() == goal_state:
+	    		return curr_action, total_nodes_expanded
+	    		
+	    	explored.append(node.get_state())
+	    	total_nodes_expanded += 1
+	
+	    	children_nodes = list(helper.get_successor(node.get_state()).items())
+	    	
+	    	for a in children_nodes:
+	    		curr_state = a[1][0]
+	    		curr_node = Node(curr_state, node, total_nodes_expanded, a[0], a[1][1])
+	    		
+	    		
+	    		f_score = compute_g(algorithm, curr_node, goal_state) \
+	        		+ compute_h(algorithm, curr_node, goal_state)
+	        			
+	    		if (curr_state not in explored):# and (not priority_queue.contains(curr_state))):
+	    			priority_queue.push(f_score, curr_node)
+	    			
+	    			curr_action.append(a[0])
+	    			a_list[curr_node] = curr_action 
+	    			dummy = curr_action.pop()  
+    
 
     if time.time() >= time_limit:
     
