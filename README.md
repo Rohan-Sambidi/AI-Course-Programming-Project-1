@@ -1,3 +1,5 @@
+The complete project description and instructions are available in the [index.html](doc/index.html) file.
+
 # Task 1
 Use the Turtlebot environment that was set up in Programming Project 0 along with the helper code that we provided above to implement the graph search algorithm (similar to best-first search) and make it behave like the following search algorithms:
 
